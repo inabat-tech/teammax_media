@@ -1,0 +1,45 @@
+name: 毎朝ニュース取得・要約
+
+on:
+  schedule:
+    - cron: "0 23 * * *"   # UTC 23:00 = JST 翌朝 8:00
+  workflow_dispatch:        # 手動実行ボタンも有効化（テスト用）
+
+jobs:
+  fetch-and-summarize:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write       # posts/ への git push に必要
+
+    steps:
+      # 1. リポジトリをチェックアウト
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Python セットアップ
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # 3. 依存ライブラリをインストール
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # 4. スクリプト実行（APIキーは Secrets から注入）
+      - name: Run fetch & summarize
+        env:
+          NEWS_API_KEY:   ${{ secrets.NEWS_API_KEY }}
+          CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
+        run: python scripts/fetch_and_summarize.py
+
+      # 5. 生成された Markdown を自動コミット・プッシュ
+      - name: Commit new posts
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add posts/
+          # 新規ファイルがなければスキップ
+          git diff --cached --quiet || git commit -m "chore: add news posts $(date +'%Y-%m-%d')"
+          git push
