@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect } from "react"
 
-const REPO = "inabat-tech/meruhai-media"
+const REPO = "inabat-tech/teammax_media"
 const BRANCH = "main"
 
 async function ghApi(pat, path, method = "GET", body = null) {
