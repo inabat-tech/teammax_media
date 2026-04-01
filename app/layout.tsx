@@ -13,7 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <header>
           <div className="container">
-            <a href="/" className="site-title">メール配信、MA,CRM周りのデジタルマーケティングに役立つニュース</a>
+            <a href="/" className="site-title">チームマックスに役立つニュース（サイトタイトル）</a>
             <p className="site-desc">
               メール担当者が賢くなれる場所 ／{' '}
               <a href="https://www.meruhaikun.com/" target="_blank" rel="noopener noreferrer" className="service-link">
