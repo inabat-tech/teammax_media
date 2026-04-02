@@ -13,7 +13,6 @@ MAX_ARTICLES = 10
 JST = timezone(timedelta(hours=9))
 
 RSS_FEEDS = [
-    {"name": "MarTech", "url": "https://martech.org/feed/"},
     {"name": "Litmus", "url": "https://www.litmus.com/blog/feed/"},
     {"name": "Google News メール配信", "url": "https://news.google.com/rss/search?q=%E3%83%A1%E3%83%BC%E3%83%AB%E9%85%8D%E4%BF%A1&hl=ja&gl=JP&ceid=JP:ja"},
     {"name": "Google News MAツール", "url": "https://news.google.com/rss/search?q=MA%E3%83%84%E3%83%BC%E3%83%AB&hl=ja&gl=JP&ceid=JP:ja"},
