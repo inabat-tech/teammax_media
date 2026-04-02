@@ -13,7 +13,6 @@ MAX_ARTICLES = 10
 JST = timezone(timedelta(hours=9))
 
 RSS_FEEDS = [
-    {"name": "Google News EN", "url": "https://news.google.com/rss/search?q=email+marketing&hl=en-US&gl=US&ceid=US:en"},
     {"name": "Google News MA", "url": "https://news.google.com/rss/search?q=marketing+automation&hl=en-US&gl=US&ceid=US:en"},
     {"name": "Google News JP", "url": "https://news.google.com/rss/search?q=%E3%83%A1%E3%83%BC%E3%83%AB%E3%83%9E%E3%83%BC%E3%82%B1%E3%83%86%E3%82%A3%E3%83%B3%E3%82%B0&hl=ja&gl=JP&ceid=JP:ja"},
     {"name": "MarTech", "url": "https://martech.org/feed/"},
