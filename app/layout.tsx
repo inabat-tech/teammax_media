@@ -3,8 +3,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: "メールマーケティング　お役立ちニュース！",
-  description: "メール担当者が賢くなれる場所。メール配信・MA・CRM の最新情報をわかりやすく。",
+  title: "サッカー等スポーツのユニフォーム　お役立ちニュース！",
+  description: "ユニフォーム担当者が賢くなれる場所。世界のユニフォームニュースを",
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
