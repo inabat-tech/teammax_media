@@ -13,7 +13,6 @@ MAX_ARTICLES = 10
 JST = timezone(timedelta(hours=9))
 
 RSS_FEEDS = [
-    {"name": "Google News メール配信", "url": "https://news.google.com/rss/search?q=%E3%83%A1%E3%83%BC%E3%83%AB%E9%85%8D%E4%BF%A1&hl=ja&gl=JP&ceid=JP:ja"},
     {"name": "Google News MAツール", "url": "https://news.google.com/rss/search?q=MA%E3%83%84%E3%83%BC%E3%83%AB&hl=ja&gl=JP&ceid=JP:ja"},
     {"name": "ユニフォーム関連Google NewsJP", "url": "https://news.google.com/rss/search?q=%E3%82%B5%E3%83%83%E3%82%AB%E3%83%BC%E3%83%A6%E3%83%8B%E3%83%95%E3%82%A9%E3%83%BC%E3%83%A0%2C%E3%83%90%E3%82%B9%E3%82%B1%E3%83%A6%E3%83%8B%E3%83%95%E3%82%A9%E3%83%BC%E3%83%A0%2C%E3%83%90%E3%83%AC%E3%83%BC%E3%83%9C%E3%83%BC%E3%83%AB%E3%83%A6%E3%83%8B%E3%83%95%E3%82%A9%E3%83%BC%E3%83%A0%2C%E3%83%A9%E3%82%B0%E3%83%93%E3%83%BC%E3%82%B8%E3%83%A3%E3%83%BC%E3%82%B8%2C%E3%83%80%E3%83%B3%E3%82%B9%E3%83%A6%E3%83%8B%E3%83%95%E3%82%A9%E3%83%BC%E3%83%A0%2C%E9%99%B8%E4%B8%8A%E3%83%A6%E3%83%8B%E3%83%95%E3%82%A9%E3%83%BC%E3%83%A0&hl=ja&gl=JP&ceid=JP:ja"},
 ]
