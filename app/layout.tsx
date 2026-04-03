@@ -15,10 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="container">
             <a href="/" className="site-title">チームユニフォームTeammaxニュース</a>
             <p className="site-desc">
-              メール担当者が賢くなれる場所 ／{' '}
-              <a href="https://www.meruhaikun.com/" target="_blank" rel="noopener noreferrer" className="service-link">
-                メール配信システム「める配くん」
-              </a>
+              メール担当者が賢くなれる場所
             </p>
           </div>
         </header>
