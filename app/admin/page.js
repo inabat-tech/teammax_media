@@ -168,6 +168,78 @@ export default function AdminPage() {
     setLoading(false)
   }
 
+  const DEFAULT_CSS = `*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  background: #f8f9fa;
+  color: #212529;
+  line-height: 1.7;
+}
+.container { max-width: 860px; margin: 0 auto; padding: 0 1.2rem; }
+/* ヘッダー */
+header {
+  background: #fff;
+  border-bottom: 2px solid #3b82f6;
+  padding: 1rem 0;
+  margin-bottom: 2.5rem;
+}
+.site-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #3b82f6;
+  text-decoration: none;
+}
+.site-desc { font-size: 0.8rem; color: #6b7280; margin-top: 0.2rem; }
+/* 記事一覧 */
+.post-list { display: flex; flex-direction: column; gap: 1.2rem; }
+.post-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.2rem 1.4rem;
+  border: 1px solid #e5e7eb;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: box-shadow 0.15s;
+}
+.post-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.post-card h2 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; color: #1e3a5f; }
+.post-meta { font-size: 0.78rem; color: #9ca3af; margin-bottom: 0.6rem; }
+.post-comment { font-size: 0.88rem; color: #4b5563; }
+.tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.7rem; }
+.tag {
+  font-size: 0.72rem;
+  background: #eff6ff;
+  color: #3b82f6;
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+}
+.tag.industry { background: #f0fdf4; color: #16a34a; }
+/* 記事詳細 */
+.post-detail { background: #fff; border-radius: 8px; padding: 2rem; border: 1px solid #e5e7eb; margin-bottom: 2rem; }
+.post-detail h1 { font-size: 1.4rem; font-weight: 700; color: #1e3a5f; margin-bottom: 0.6rem; }
+.post-body { margin-top: 1.5rem; }
+.post-body h2 { font-size: 1.05rem; font-weight: 700; margin: 1.5rem 0 0.5rem; color: #1e3a5f; }
+.post-body p { margin-bottom: 1rem; }
+.post-body blockquote {
+  border-left: 3px solid #3b82f6;
+  padding: 0.5rem 1rem;
+  background: #eff6ff;
+  border-radius: 0 6px 6px 0;
+  color: #1d4ed8;
+  margin: 1rem 0;
+}
+.post-body a { color: #3b82f6; }
+.back-link { display: inline-block; margin-bottom: 1.5rem; color: #3b82f6; text-decoration: none; font-size: 0.9rem; }
+.back-link:hover { text-decoration: underline; }
+/* フッター */
+footer { margin-top: 4rem; padding: 1.5rem 0; border-top: 1px solid #e5e7eb; text-align: center; font-size: 0.8rem; color: #9ca3af; }
+.service-link { color: #6b7280; text-decoration: none; font-size: 0.8rem; border-bottom: 1px dotted #9ca3af; }
+.service-link:hover { color: #3b82f6; border-bottom-color: #3b82f6; }
+.service-banner { margin-top: 1.5rem; padding: 1rem 1.2rem; background: #f8faff; border: 1px solid #dbeafe; border-radius: 6px; font-size: 0.85rem; color: #4b5563; }
+.service-banner a { color: #3b82f6; text-decoration: none; font-weight: 600; }
+.service-banner a:hover { text-decoration: underline; }`
+
   const loadCss = async () => {
     setLoading(true)
     try {
@@ -176,6 +248,11 @@ export default function AdminPage() {
       setCssSha(sha)
     } catch (e) { notify("❌ " + e.message) }
     setLoading(false)
+  }
+
+  const resetCss = () => {
+    if (!confirm("CSSをデフォルトに戻しますか？")) return
+    setCssContent(DEFAULT_CSS)
   }
 
   const saveCss = async () => {
@@ -409,8 +486,9 @@ export default function AdminPage() {
             rows={30}
             style={{ ...taSt, fontFamily:"monospace", fontSize:12 }}
           />
-          <div style={{ marginTop:12 }}>
+          <div style={{ marginTop:12, display:"flex", gap:8 }}>
             <button onClick={saveCss} disabled={loading} style={btn("#3b82f6")}>{loading?"保存中...":"💾 CSSを保存"}</button>
+            <button onClick={resetCss} disabled={loading} style={btn("#6b7280")}>🔄 デフォルトに戻す</button>
           </div>
         </div>
       )}
