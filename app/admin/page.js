@@ -90,6 +90,8 @@ export default function AdminPage() {
   const [htmlDesc, setHtmlDesc] = useState("")
   const [siteTitle, setSiteTitle] = useState("")
   const [siteDesc, setSiteDesc] = useState("")
+  const [cssContent, setCssContent] = useState("")
+  const [cssSha, setCssSha] = useState("")
 
   const [running, setRunning] = useState(false)
 
@@ -166,6 +168,26 @@ export default function AdminPage() {
     setLoading(false)
   }
 
+  const loadCss = async () => {
+    setLoading(true)
+    try {
+      const { content, sha } = await getFile(pat, "app/globals.css")
+      setCssContent(content)
+      setCssSha(sha)
+    } catch (e) { notify("❌ " + e.message) }
+    setLoading(false)
+  }
+
+  const saveCss = async () => {
+    setLoading(true)
+    try {
+      const { sha } = await getFile(pat, "app/globals.css")
+      await putFile(pat, "app/globals.css", cssContent, sha, "update: globals.css")
+      notify("✅ CSS保存しました！数分後に反映されます")
+    } catch (e) { notify("❌ " + e.message) }
+    setLoading(false)
+  }
+
   const saveSettings = async () => {
     setLoading(true)
     try {
@@ -186,6 +208,7 @@ export default function AdminPage() {
     if (tab === "posts") loadPosts()
     else if (tab === "feeds") loadFeeds()
     else if (tab === "settings") loadSettings()
+    else if (tab === "css") loadCss()
   }, [authed, tab])
 
   const savePost = async () => {
@@ -239,7 +262,7 @@ export default function AdminPage() {
   const btn = (c) => ({ background:c, color:"#fff", border:"none", borderRadius:6, padding:"7px 18px", cursor:"pointer", fontSize:13 })
   const lbl = { fontSize:12, color:"#6b7280", display:"block", marginBottom:4 }
   const card = { background:"#fff", border:"1px solid #e5e7eb", borderRadius:8, padding:"14px 18px", marginBottom:10 }
-  const TABS = [["posts","📄 記事管理"],["feeds","📡 フィード管理"],["settings","⚙️ サイト設定"]]
+  const TABS = [["posts","📄 記事管理"],["feeds","📡 フィード管理"],["settings","⚙️ サイト設定"],["css","🎨 CSS編集"]]
 
   if (!authed) return (
     <div style={{ maxWidth:400, margin:"80px auto", padding:24, background:"#fff", borderRadius:12, border:"1px solid #e5e7eb" }}>
@@ -257,7 +280,7 @@ export default function AdminPage() {
       {toast && <div style={{ position:"fixed", top:20, right:20, background:"#1e3a5f", color:"#fff", padding:"10px 18px", borderRadius:8, zIndex:999 }}>{toast}</div>}
       <div style={{ display:"flex", alignItems:"center", marginBottom:20 }}>
         <div>
-          <h1 style={{ fontSize:18, fontWeight:700, color:"#1e3a5f", margin:0 }}>📧 める配くん 管理画面</h1>
+          <h1 style={{ fontSize:18, fontWeight:700, color:"#1e3a5f", margin:0 }}>📧 {siteTitle || "サイトタイトル"} 管理画面</h1>
           <a href="/" style={{ fontSize:12, color:"#9ca3af" }}>← サイトに戻る</a>
         </div>
         <button onClick={()=>setAuthed(false)} style={{ marginLeft:"auto", background:"#f3f4f6", border:"none", borderRadius:6, padding:"6px 14px", cursor:"pointer", fontSize:12 }}>ログアウト</button>
@@ -266,7 +289,7 @@ export default function AdminPage() {
       <div style={{ background:"#f0fdf4", border:"1px solid #bbf7d0", borderRadius:8, padding:"12px 18px", marginBottom:20, display:"flex", alignItems:"center", gap:12 }}>
         <div style={{ flex:1 }}>
           <div style={{ fontWeight:600, fontSize:13, color:"#166534" }}>🚀 ニュース取得・更新</div>
-          <div style={{ fontSize:12, color:"#4ade80", color:"#15803d" }}>最新ニュースを今すぐ取得してサイトを更新します</div>
+          <div style={{ fontSize:12, color:"#15803d" }}>最新ニュースを今すぐ取得してサイトを更新します</div>
         </div>
         <button onClick={runWorkflow} disabled={running}
           style={{ background: running ? "#9ca3af" : "#16a34a", color:"#fff", border:"none", borderRadius:6, padding:"8px 20px", cursor: running ? "not-allowed" : "pointer", fontSize:13, fontWeight:600, whiteSpace:"nowrap" }}>
@@ -332,8 +355,8 @@ export default function AdminPage() {
         ))}
         <div style={{ ...card, marginTop:20 }}>
           <div style={{ fontWeight:600, marginBottom:14 }}>➕ フィードを追加</div>
-          <div style={{ marginBottom:10 }}><label style={lbl}>フィード名</label><input value={newName} onChange={e=>setNewName(e.target.value)} placeholder="例：Google News メール配信" style={iSt} /></div>
-          <div style={{ marginBottom:10 }}><label style={lbl}>Google Newsキーワード（URLを自動生成）</label><input value={newKw} onChange={e=>setNewKw(e.target.value)} placeholder="例：メール配信 開封率" style={iSt} /></div>
+          <div style={{ marginBottom:10 }}><label style={lbl}>フィード名</label><input value={newName} onChange={e=>setNewName(e.target.value)} placeholder="例：Google News チームマックス" style={iSt} /></div>
+          <div style={{ marginBottom:10 }}><label style={lbl}>Google Newsキーワード（URLを自動生成）</label><input value={newKw} onChange={e=>setNewKw(e.target.value)} placeholder="例：チームユニフォーム" style={iSt} /></div>
           <div style={{ marginBottom:12 }}><label style={lbl}>または RSS URLを直接入力</label><input value={newUrl} onChange={e=>setNewUrl(e.target.value)} placeholder="https://example.com/feed/" style={iSt} /></div>
           {newKw && <div style={{ fontSize:11, color:"#3b82f6", marginBottom:10 }}>生成URL: https://news.google.com/rss/search?q={encodeURIComponent(newKw)}&hl=ja&gl=JP&ceid=JP:ja</div>}
           <button onClick={addFeed} disabled={loading} style={btn("#3b82f6")}>{loading?"追加中...":"➕ 追加する"}</button>
@@ -352,21 +375,43 @@ export default function AdminPage() {
           </div>
           <div style={{ marginBottom:16 }}>
             <label style={{ ...lbl, fontWeight:600, color:"#374151", marginBottom:6 }}>📄 HTMLタイトル（ブラウザのタブ）</label>
-            <input value={htmlTitle} onChange={e=>setHtmlTitle(e.target.value)} placeholder="例：める配くん メディア" style={iSt} />
+            <input value={htmlTitle} onChange={e=>setHtmlTitle(e.target.value)} placeholder="例：チームマックス メディア" style={iSt} />
           </div>
           <div style={{ marginBottom:16 }}>
             <label style={{ ...lbl, fontWeight:600, color:"#374151", marginBottom:6 }}>📝 メタディスクリプション（検索結果の説明）</label>
-            <textarea value={htmlDesc} onChange={e=>setHtmlDesc(e.target.value)} rows={3} placeholder="例：メール担当者が賢くなれる場所。" style={taSt} />
+            <textarea value={htmlDesc} onChange={e=>setHtmlDesc(e.target.value)} rows={3} placeholder="例：チームマックスのメディアサイト" style={taSt} />
           </div>
           <div style={{ marginBottom:16 }}>
             <label style={{ ...lbl, fontWeight:600, color:"#374151", marginBottom:6 }}>🏷️ サイトタイトル（ヘッダー）</label>
-            <input value={siteTitle} onChange={e=>setSiteTitle(e.target.value)} placeholder="例：📧 める配くん メディア" style={iSt} />
+            <input value={siteTitle} onChange={e=>setSiteTitle(e.target.value)} placeholder="例：チームマックス メディア" style={iSt} />
           </div>
           <div style={{ marginBottom:20 }}>
             <label style={{ ...lbl, fontWeight:600, color:"#374151", marginBottom:6 }}>💬 サイト説明文（ヘッダー下）</label>
-            <input value={siteDesc} onChange={e=>setSiteDesc(e.target.value)} placeholder="例：メール担当者が賢くなれる場所" style={iSt} />
+            <input value={siteDesc} onChange={e=>setSiteDesc(e.target.value)} placeholder="例：チームスポーツのユニフォーム情報" style={iSt} />
           </div>
           <button onClick={saveSettings} disabled={loading} style={btn("#3b82f6")}>{loading?"保存中...":"💾 サイト設定を保存"}</button>
+        </div>
+      )}
+
+      {tab==="css" && (
+        <div style={card}>
+          <div style={{ display:"flex", alignItems:"center", marginBottom:16 }}>
+            <span style={{ fontWeight:700, fontSize:15 }}>🎨 CSS編集</span>
+            <button onClick={loadCss} disabled={loading} style={{ marginLeft:"auto", background:"#f3f4f6", border:"none", borderRadius:6, padding:"4px 12px", cursor:"pointer", fontSize:12 }}>🔄 再読み込み</button>
+          </div>
+          {loading && <p style={{ color:"#9ca3af" }}>読み込み中...</p>}
+          <div style={{ background:"#fffbeb", border:"1px solid #fde68a", borderRadius:6, padding:"10px 14px", marginBottom:16, fontSize:12, color:"#92400e" }}>
+            ⚠️ 保存するとVercelが自動デプロイされ、数分後に反映されます
+          </div>
+          <textarea
+            value={cssContent}
+            onChange={e=>setCssContent(e.target.value)}
+            rows={30}
+            style={{ ...taSt, fontFamily:"monospace", fontSize:12 }}
+          />
+          <div style={{ marginTop:12 }}>
+            <button onClick={saveCss} disabled={loading} style={btn("#3b82f6")}>{loading?"保存中...":"💾 CSSを保存"}</button>
+          </div>
         </div>
       )}
     </div>
